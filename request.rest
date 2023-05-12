@@ -1,0 +1,32 @@
+GET http://localhost:5000/users
+Authorization: Bearer
+
+
+
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name" : "Chrisnico",
+    "email" : "chrisnico@gmail.com",
+    "password" : "123",
+    "repassword" : "123"
+}
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email" : "chrisnico@gmail.com",
+    "password" : "123"
+}
+
+POST  http://localhost:5000/mahasiswa
+{
+    "name" : "CHrisnico",
+    "nim" : "120140242",
+    "nomorIjasah" : "1231241234",
+    "prodi" : "Teknik Pertambangan"
+}
+
