@@ -7,10 +7,10 @@ import { refreshToken } from "../controller/refreshToken.js";
 const router = express.Router();
 
 router.get("/users", verifyToken, getUsers);
-router.get("/mahasiswa", getAllMahasiswa);
-router.delete("/mahasiswa/(:id)", deleteMahasiswa);
-router.get("/mahasiswa/:id", updateMahasiswa);
-router.post("/mahasiswa", createMahasiswa);
+router.get("/mahasiswa", verifyToken, getAllMahasiswa);
+router.delete("/mahasiswa/(:id)", verifyToken, deleteMahasiswa);
+router.post("/mahasiswa/(:id)", verifyToken, updateMahasiswa);
+router.post("/mahasiswa", verifyToken, createMahasiswa);
 router.post("/users", registerUser);
 router.post("/login", loginUser);
 router.get("/token", refreshToken);

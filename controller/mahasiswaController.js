@@ -1,12 +1,11 @@
-import { Sequelize } from "sequelize";
 import Mahasiswa from "../models/mahasiswaModel.js";
 import Ipk from "../models/ipkModel.js";
 import db from "../config/database.js";
 
 export const getAllMahasiswa = async (req, res) => {
   try {
-    const mahasiswa = await db.query("SELECT m.name, m.nim , m.nomorIjasah ,  i.prodi FROM mahasiswa m LEFT JOIN ipk i on i.nim = m.nim");
-    res.json(mahasiswa);
+    const mahasiswa = await db.query("SELECT m.id ,m.name, m.nim , m.nomorIjasah ,  i.prodi FROM mahasiswa m LEFT JOIN ipk i on i.nim = m.nim");
+    res.json(mahasiswa[0]);
   } catch (error) {
     console.error(error);
   }
@@ -14,8 +13,8 @@ export const getAllMahasiswa = async (req, res) => {
 
 export const createMahasiswa = async (req, res) => {
   const t = await db.transaction();
-  const { name, nim, nomorIjasah, prodi } = req.body;
   try {
+    const { name, nim, nomorIjasah, prodi } = req.body;
     await Mahasiswa.create(
       {
         name: name,
@@ -32,22 +31,22 @@ export const createMahasiswa = async (req, res) => {
       },
       { transaction: t }
     );
-
-    await t.commit();
-    res.json({
-      msg: "Data berhasil ditambahkan",
+    t.commit();
+    return res.status(201).send({
+      status: {
+        msg: "Create mahasiswa berhasil",
+      },
     });
-    return res.sendStatus(201);
   } catch (error) {
-    t.rollback();
-    console.error(error);
+    console.log(error);
+    await t.rollback();
   }
 };
 
 export const updateMahasiswa = async (req, res) => {
-  const t = await Sequelize.transaction();
+  const t = await db.transaction();
   const { name, nomorIjasah, prodi } = req.body;
-  const { id } = req.params.id;
+  const { id } = req.params;
   const mahasiswa = await Mahasiswa.findAll({
     where: {
       id: id,
@@ -83,7 +82,11 @@ export const updateMahasiswa = async (req, res) => {
         transaction: t,
       }
     );
-    return res.sendStatus(200);
+    return res.status(200).send({
+      status: {
+        msg: "Data berhasil di Update",
+      },
+    });
   } catch (error) {
     await t.rollback();
     console.error(error);
